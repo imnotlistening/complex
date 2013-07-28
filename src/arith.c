@@ -18,13 +18,15 @@
 
 #include <complex/arith.h>
 
+#include <stdio.h>
+
 /**
  * Add @a and @b and store the result in @a.
  *
  *@a A complex number.
  *@b Another complex number.
  */
-inline complex_t *c_add(complex_t *a, complex_t *b)
+inline cx_t *cx_add(cx_t *a, cx_t *b)
 {
 	a->r += b->r;
 	a->i += b->i;
@@ -37,7 +39,7 @@ inline complex_t *c_add(complex_t *a, complex_t *b)
  *@a A complex number.
  *@b Another complex number.
  */
-inline complex_t *c_sub(complex_t *a, complex_t *b)
+inline cx_t *cx_sub(cx_t *a, cx_t *b)
 {
 	a->r -= b->r;
 	a->i -= b->i;
@@ -50,10 +52,12 @@ inline complex_t *c_sub(complex_t *a, complex_t *b)
  *@a A complex number.
  *@b Another complex number.
  */
-inline complex_t *c_mult(complex_t *a, complex_t *b)
+inline cx_t *cx_mult(cx_t *a, cx_t *b)
 {
-	a->r = (a->r * b->r) - (a->i * b->i);
+	double temp;
+	temp = (a->r * b->r) - (a->i * b->i);
 	a->i = (a->i * b->r) + (a->r * b->i);
+	a->r = temp;
 	return a;
 }
 
@@ -63,13 +67,26 @@ inline complex_t *c_mult(complex_t *a, complex_t *b)
  *@a A complex number.
  *@b Another complex number.
  */
-inline complex_t *c_div(complex_t *a, complex_t *b)
+inline cx_t *cx_div(cx_t *a, cx_t *b)
 {
-	a->r = ((a->r * b->r) + (a->i * b->i)) /
+	double temp;
+	temp = ((a->r * b->r) + (a->i * b->i)) /
 	       ((b->r * b->r) + (b->i * b->i));
 	a->i = ((a->i * b->r) - (a->r * b->i)) /
 	       ((b->r * b->r) + (b->i * b->i));
+	a->r = temp;
 	return a;
+}
+
+/**
+ * Returns true if the two passed complex numbers are the same.
+ *
+ *@a A complex number.
+ *@b Another complex number.
+ */
+inline int cx_cmp(cx_t *a, cx_t *b)
+{
+	return (a->r == b->r) && (a->i == b->i);
 }
 
 /**
@@ -77,8 +94,8 @@ inline complex_t *c_div(complex_t *a, complex_t *b)
  *
  *@c A complex number.
  */
-inline complex_t *c_conj(complex_t *c)
+inline cx_t *cx_conj(cx_t *c)
 {
-	c->r *= -1;
+	c->i *= -1;
 	return c;
 }

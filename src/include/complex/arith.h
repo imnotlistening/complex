@@ -23,10 +23,12 @@
 /*
  * Size of each component of the complex number.
  */
-#if _COMPLEX_PREC == 8
+#if _COMPLEX_PREC == 8 || !defined(_COMPLEX_PREC)
 typedef double complex_component_t;
-#else
+#elif _COMPLEX_PREC == 4
 typedef float complex_component_t;
+#else
+#error Invalid complex precision; use either 4 or 8.
 #endif
 
 /*
@@ -35,35 +37,36 @@ typedef float complex_component_t;
 typedef struct complex_t {
 	complex_component_t r;
 	complex_component_t i;
-} complex_t;
+} cx_t;
 
 /*
  * Basic complex arithmetic operations. All binary operations store the result
  * of the computation in the first argument.
  */
-inline complex_t *c_add(complex_t *a, complex_t *b);
-inline complex_t *c_sub(complex_t *a, complex_t *b);
-inline complex_t *c_mult(complex_t *a, complex_t *b);
-inline complex_t *c_div(complex_t *a, complex_t *b);
-inline complex_t *c_conj(complex_t *c);
+inline cx_t *cx_add(cx_t *a, cx_t *b);
+inline cx_t *cx_sub(cx_t *a, cx_t *b);
+inline cx_t *cx_mult(cx_t *a, cx_t *b);
+inline cx_t *cx_div(cx_t *a, cx_t *b);
+inline cx_t *cx_conj(cx_t *c);
+inline int   cx_cmp(cx_t *a, cx_t *b);
 
 /*
  * Macros for obtaining the components of the complex number.
  */
-#define complex_r(c) ((c).r)
-#define complex_i(c) ((c).i)
+#define cx_r(c) ((c)->r)
+#define cx_i(c) ((c)->i)
 
-#define complex_dr(c) ((double) complex_r(c))
-#define complex_sr(c) ((float) complex_r(c))
-#define complex_di(c) ((double) complex_i(c))
-#define complex_si(c) ((float) complex_i(c))
+#define cx_dr(c) ((double) cx_r(c))
+#define cx_sr(c) ((float)  cx_r(c))
+#define cx_di(c) ((double) cx_i(c))
+#define cx_si(c) ((float)  cx_i(c))
 
 /*
  * Other useful things.
  */
-#define complex(__r, __i) { .r = __r, .i = __i }
-#define complex_set(c, __r, __i)			\
-	do { (c).r = (__r); (c).i = (__i) } while (0)
-#define define_complex(c, r, i) complex_t c = complex(r, i)
+#define cx(__r, __i) { .r = __r, .i = __i }
+#define cx_set(c, __r, __i)			\
+	do { (c)->r = (__r); (c)->i = (__i) } while (0)
+#define define_cx(c, r, i) cx_t c = cx(r, i)
 
 #endif

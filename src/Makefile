@@ -1,4 +1,3 @@
-#
 # (C) Copyright 2013
 # Alex Waterman <imNotListening@gmail.com>
 #
@@ -18,9 +17,9 @@ ifeq ($(CC),)
 CC := gcc
 endif
 
-#ifeq ($(LD),)
-#LD := ld
-#endif
+ifeq ($(LD),)
+LD := ld
+endif
 
 ifeq ($(CFLAGS),)
 CFLAGS := -O3 -ggdb -Wall
@@ -40,7 +39,7 @@ all: $(objs)
 	$(LD) -r -o complex.o $(objs)
 
 .c.o:
-	$(CC)  $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 so:
 
